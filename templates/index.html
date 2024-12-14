@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Recommendation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="http://127.0.0.1:5500/static/styles.css">
+</head>
+
+<body>
+    <div class="taskbar">
+        <div class="taskbar-left">
+            <img src="http://127.0.0.1:5500/static/Spotify_Logo.png" alt="Spotify Logo" class="logo">
+            <span class="title">Song Recommendation</span>
+        </div>
+
+        <div class="taskbar-right">
+            <img src="http://127.0.0.1:5500/static/search-icon.png" alt="Search Icon" class="icon">
+            <img src="http://127.0.0.1:5500/static/help-icon.png" alt="Help Icon" class="icon">
+            <img src="http://127.0.0.1:5500/static/notification-icon.png" alt="Notification Icon" class="icon">
+            <img src="http://127.0.0.1:5500/static/online-status-icon.webp" alt="Status Icon" class="icon">
+            <img src="http://127.0.0.1:5500/static/setting-icon.png" alt="Setting Icon" class="icon">
+        </div>
+    </div>
+
+    <main>
+        <div class="left-panel">
+        <div class="controls">
+            <h2>Adjust the settings below to discover songs that match your mood and dancing style!</h2>
+
+            <form id="recommendation-form">
+                <!-- Genre Dropdown -->
+                <div class="dropdown-container">
+                    <label for="genre" class="label">Genre</label>
+                    <select class="dropdown" id="genre">
+                        <option value="" disabled selected>Choose your favourite genre</option>
+                        <option value="1">Comedy</option>
+                        <option value="2">Black Metal</option>
+                        <option value="3">Acoustic</option>
+                        <option value="4">Chill</option>
+                        <option value="5">K-Pop</option>
+                    </select>
+                </div>
+
+                <!-- Sliders -->
+                <div class="slider-group">
+                    <label for="instrumentalness" class="label">Instrumentalness</label>
+                    <div class="slider-container">
+                        <span id="instrumentalness-min">0</span>
+                        <input type="range" id="instrumentalness" name="instrumentalness" class="form-range" min="0" max="1" step="0.01" value="0">
+                        <span id="instrumentalness-max">1</span>
+                        <div id="instrumentalness-value" class="slider-value">0</div>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="speechiness" class="label">Speechiness</label>
+                    <div class="slider-container">
+                        <span id="speechiness-min">0</span>
+                        <input type="range" id="speechiness" name="speechiness" class="form-range" min="0" max="1" step="0.01" value="0">
+                        <span id="speechiness-max">1</span>
+                        <div id="speechiness-value" class="slider-value">0</div>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="acousticness" class="label">Acousticness</label>
+                    <div class="slider-container">
+                        <span id="acousticness-min">0</span>
+                        <input type="range" id="acousticness" name="acousticness" class="form-range" min="0" max="1" step="0.01" value="0">
+                        <span id="acousticness-max">1</span>
+                        <div id="acousticness-value" class="slider-value">0</div>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="liveness" class="label">Liveness</label>
+                    <div class="slider-container">
+                        <span id="liveness-min">0</span>
+                        <input type="range" id="liveness" name="liveness" class="form-range" min="0" max="1" step="0.01" value="0">
+                        <span id="liveness-max">1</span>
+                        <div id="liveness-value" class="slider-value">0</div>
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label for="tempo" class="label">Tempo</label>
+                    <div class="slider-container">
+                        <span id="tempo-min">0</span>
+                        <input type="range" id="tempo" name="tempo" class="form-range" min="0" max="1" step="0.01" value="0">
+                        <span id="tempo-max">250</span>
+                        <div id="tempo-value" class="slider-value">0</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="recommend-btn">Get Recommendations</button>
+                <button type="button" id="refresh-btn" class="refresh-btn">Refresh</button>
+            </form>
+        </div>
+        </div>
+
+        <div class="right-panel">
+            <h4 class="recommendations-heading">Recommended Songs</h4>
+            <ul id="song-list" class="list-group">
+                <!-- Recommended songs will be displayed here -->
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        const form = document.getElementById('recommendation-form');
+        const songList = document.getElementById('song-list');
+        const recommendationsHeading = document.querySelector('.recommendations-heading');
+        const refreshBtn = document.getElementById('refresh-btn');
+        
+        function updateRangeColor(slider) {
+            const value = slider.value;
+            const max = slider.max;
+            const percentage = (value / max) * 100;
+
+            slider.style.background = `linear-gradient(to right, #e2d372 ${percentage}%, #ddd ${percentage}%)`;
+        }
+
+        // Update slider values
+        document.querySelectorAll('.form-range').forEach(slider => {
+            slider.addEventListener('input', function() {
+                document.getElementById(slider.id + '-value').textContent = slider.value;
+                updateRangeColor(slider);
+            });
+        });
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {};
+
+            // Ensure genre is included as a float first
+            data['genre'] = parseFloat(document.getElementById('genre').value);
+
+            formData.forEach((value, key) => {
+                if (key !== 'genre') {
+                    data[key] = parseFloat(value);
+                }
+            });
+
+            // Log the data to check the order
+            console.log("Sending data:", data);
+
+            try {
+                const response = await fetch('http://localhost:5000/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Error:', errorData);
+                    alert('Error: ' + errorData.error);
+                } else {
+                    const recommendations = await response.json();
+                    songList.innerHTML = '';  // Clear previous recommendations
+
+                    if (recommendations.length === 0) {
+                        songList.innerHTML = '<li>No recommendations available.</li>';
+                    } else {
+                        // Show the recommendations heading
+                        recommendationsHeading.classList.add('show');
+
+                        // Show the song items with a delay
+                        recommendations.slice(0, 5).forEach((song, index) => {
+                            const li = document.createElement('li');
+                            li.className = "list-group-item song-item";
+                            li.innerHTML = `
+                                <div>
+                                    <strong>${song.track_name}</strong> by ${song.artist_name}
+                                </div>
+                                <div>
+                                    <!-- Spotify Play Button -->
+                                    <iframe src="https://open.spotify.com/embed/track/${song.track_id}" width="300" height="80" frameBorder="0" allow="encrypted-media"></iframe>
+                                </div>
+                            `;
+                            songList.appendChild(li);
+
+                            // Add the show class with a delay
+                            setTimeout(() => {
+                                li.classList.add('show');
+                            }, index * 200); // Delay each item by 200ms
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Something went wrong. Please try again later.');
+            }
+        });
+
+        // Refresh button functionality
+        refreshBtn.addEventListener('click', function() {
+            form.reset();
+            songList.innerHTML = '';
+            recommendationsHeading.classList.remove('show');
+            document.querySelectorAll('.form-range').forEach(slider => {
+                document.getElementById(slider.id + '-value').textContent = slider.value;
+                updateRangeColor(slider);
+            });
+        });
+    </script>
+</body>
+
+</html>

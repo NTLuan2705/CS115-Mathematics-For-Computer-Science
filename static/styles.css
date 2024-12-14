@@ -1,0 +1,341 @@
+.taskbar {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* Set fixed height */
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    background-color: #ebb840;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.taskbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    width: 30px;
+    height: auto;
+    margin-left: 30px; /* Adjust space between icons dynamically */
+    cursor: pointer;
+}
+
+.taskbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.logo {
+    display: flex;
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+}
+
+body {
+    background-image: url('http://localhost:5000/static/background.png');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.controls h2 {
+    font-size: 20px;
+    margin-top: 1%;
+    margin-bottom: 4%;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+}
+
+main {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Container bao quanh dropdown */
+.dropdown {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    transition: border 0.3s ease, background-color 0.3s ease;
+    box-sizing: border-box; /* Add box-sizing */
+}
+
+/* Focus state */
+.dropdown:focus {
+    border-color: #dfbb7e;
+    background-color: #f9f9f9;
+}
+
+/* Option style */
+.dropdown option {
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown option:hover {
+    background-color: #f1f1f1;
+}
+
+.slider-group {
+    margin-bottom: 15px;
+}
+
+.slider-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #000;
+    font-family: 'Roboto', sans-serif;
+}
+
+.slider-group input[type="range"] {
+    width: 100%;
+}
+
+.recommend-btn {
+    width: 80%;
+    padding: 10px;
+    background-color: #FFC107;
+    font-size: 18px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+}
+
+.recommend-btn:hover {
+    background-color: #FFA000;
+}
+
+.controls {
+    flex: 1;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    opacity: 0.74;
+    margin-top: 80px;
+    background-color: rgba(255, 255, 255, 0.8); /* Light background for better readability */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.recommendations {
+    flex: 0.8;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 4.5%;
+}
+
+.recommendations-heading {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.74); /* White background with opacity */
+    color: black;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    margin-top: 80px;
+    opacity: 0; /* Start hidden */
+    transform: translateX(-20px); /* Start slightly to the left */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition */
+}
+
+.recommendations-heading.show {
+    opacity: 1; /* Fade in */
+    transform: translateX(0); /* Slide in from left */
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+span {
+    font-size: 16px;
+    color: black;
+}
+
+.dropdown-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Form-range adjustments */
+.form-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #e2d372 0%, #ddd 0%);
+    outline: none;
+    margin: 0; /* Loại bỏ khoảng cách thừa */
+    padding: 0;
+    transition: background 0.1s ease-in-out;
+}
+
+.form-range::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    border-radius: 5px;
+    background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e2d372;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.form-range:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.75);
+}
+
+.song-item {
+    background-color: rgba(255, 255, 255, 0.74); /* White background with opacity */
+    border-radius: 10px; /* Rounded corners */
+    padding: 10px; /* Padding inside the item */
+    margin-bottom: 10px; /* Space between items */
+    color: black; /* Black text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+    opacity: 0; /* Start hidden */
+    transform: translateY(-20px); /* Start slightly above */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transition */
+    overflow: hidden; /* Prevent overflow */
+}
+
+.song-item div {
+    margin-bottom: 10px;
+}
+
+.song-item.show {
+    opacity: 1; /* Fade in */
+    transform: translateY(0); /* Slide down */
+}
+
+.container {
+    max-width: 100%; /* Ensure the container does not exceed the screen width */
+    padding: 20px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 80px; /* Add some space below the taskbar */
+}
+
+.left-panel {
+    flex: 4; /* 40% of the width */
+}
+
+.right-panel {
+    flex: 6; /* 60% of the width */
+}
+
+.list-group {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+.recommendations-heading h4 {
+    font-size: 24px;
+    margin: 0;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.song-item iframe {
+    width: 100%;
+    height: 80px;
+    border: none;
+    overflow: hidden; /* Ẩn bất kỳ thanh cuộn nào */
+    display: block; /* Đảm bảo iframe không bị tràn */
+    box-sizing: border-box;
+     /* Bao gồm padding và border vào kích thước */
+}
+
+.refresh-btn {
+    background-color: #2196F3; /* Red background */
+    color: white; /* White text */
+    border: none;
+    font-size: 18px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.refresh-btn:hover {
+    background-color: #1976D2; /* Darker red on hover */
+}
+
+.slider-value {
+    position: absolute;
+    top: -30px; /* Position above the slider */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none; /* Prevent interaction */
+}
+
+.slider-container:hover .slider-value {
+    display: block; /* Show on hover */
+}
